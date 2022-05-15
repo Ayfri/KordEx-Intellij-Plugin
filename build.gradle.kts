@@ -23,7 +23,11 @@ repositories {
 }
 
 dependencies {
-	implementation("com.kotlindiscord.kord.extensions:kord-extensions:1.5.3-20220422.152027-6")
+	implementation("com.kotlindiscord.kord.extensions:kord-extensions:1.5.3-20220422.152027-6") {
+		version {
+			require("1.5.3-20220422.152027-6")
+		}
+	}
 }
 
 intellij {
