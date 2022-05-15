@@ -4,6 +4,7 @@ plugins {
 	java
 	kotlin("jvm") version "1.6.21"
 	id("org.jetbrains.intellij") version "1.5.3"
+	id("co.uzzu.dotenv.gradle") version "1.1.0"
 }
 
 group = "io.ayfri"
@@ -59,12 +60,12 @@ tasks {
 	}
 	
 	signPlugin {
-		certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
-		privateKey.set(System.getenv("PRIVATE_KEY"))
-		password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
+		certificateChain.set(env.fetchOrNull("CERTIFICATE_CHAIN") ?: System.getenv("CERTIFICATE_CHAIN"))
+		privateKey.set(env.fetchOrNull("PRIVATE_KEY") ?: System.getenv("PRIVATE_KEY"))
+		password.set(env.fetchOrNull("PRIVATE_KEY_PASSWORD") ?: System.getenv("PRIVATE_KEY_PASSWORD"))
 	}
 	
 	publishPlugin {
-		token.set(System.getenv("PUBLISH_TOKEN"))
+		token.set(env.fetchOrNull("PUBLISH_TOKEN") ?: System.getenv("PUBLISH_TOKEN"))
 	}
 }

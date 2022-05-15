@@ -43,3 +43,6 @@ bin/
 
 ### Intellij DevKit ###
 .run
+
+### Configuration ###
+.env
