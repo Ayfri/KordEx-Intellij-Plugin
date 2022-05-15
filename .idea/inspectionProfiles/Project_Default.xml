@@ -8,7 +8,6 @@
     <inspection_tool class="FromClosedRangeMigration" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="GDXJavaShapeRendererCrash" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="IncorrectFormatting" enabled="true" level="INFORMATION" enabled_by_default="true">
-      <option name="reportPerFile" value="true" />
       <option name="kotlinOnly" value="true" />
     </inspection_tool>
     <inspection_tool class="JavaDoc" enabled="true" level="WARNING" enabled_by_default="true">

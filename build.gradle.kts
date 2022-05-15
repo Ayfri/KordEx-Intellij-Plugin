@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
 	java
 	kotlin("jvm") version "1.6.21"
@@ -46,7 +48,8 @@ tasks {
 		sourceCompatibility = "11"
 		targetCompatibility = "11"
 	}
-	withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+	
+	withType<KotlinCompile> {
 		kotlinOptions.jvmTarget = "11"
 	}
 	
