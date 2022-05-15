@@ -7,6 +7,8 @@ plugins {
 	id("co.uzzu.dotenv.gradle") version "1.1.0"
 }
 
+fun getEnv(envName: String) = env.fetchOrNull(envName) ?: System.getenv(envName)
+
 group = "io.ayfri"
 version = "0.1.0"
 
@@ -61,12 +63,12 @@ tasks {
 	}
 	
 	signPlugin {
-		certificateChain.set(env.fetchOrNull("CERTIFICATE_CHAIN") ?: System.getenv("CERTIFICATE_CHAIN"))
-		privateKey.set(env.fetchOrNull("PRIVATE_KEY") ?: System.getenv("PRIVATE_KEY"))
-		password.set(env.fetchOrNull("PRIVATE_KEY_PASSWORD") ?: System.getenv("PRIVATE_KEY_PASSWORD"))
+		certificateChain.set(getEnv("CERTIFICATE_CHAIN"))
+		privateKey.set(getEnv("PRIVATE_KEY"))
+		password.set(getEnv("PRIVATE_KEY_PASSWORD"))
 	}
 	
 	publishPlugin {
-		token.set(env.fetchOrNull("PUBLISH_TOKEN") ?: System.getenv("PUBLISH_TOKEN"))
+		token.set(getEnv("PUBLISH_TOKEN"))
 	}
 }
