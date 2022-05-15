@@ -4,10 +4,9 @@ plugins {
 	java
 	kotlin("jvm") version "1.6.21"
 	id("org.jetbrains.intellij") version "1.5.3"
-	id("co.uzzu.dotenv.gradle") version "1.1.0"
 }
 
-fun getEnv(envName: String) = env.fetchOrNull(envName) ?: System.getenv(envName)
+fun getEnv(envName: String) = System.getenv(envName)
 
 group = "io.ayfri"
 version = "0.1.0"
