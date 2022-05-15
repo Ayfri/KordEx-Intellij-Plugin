@@ -1,6 +1,6 @@
 plugins {
 	java
-	kotlin("jvm") version "1.6.10"
+	kotlin("jvm") version "1.6.21"
 	id("org.jetbrains.intellij") version "1.5.3"
 }
 
@@ -8,19 +8,36 @@ group = "io.ayfri"
 version = "1.0-SNAPSHOT"
 
 repositories {
+	google()
 	mavenCentral()
+	
+	maven {
+		name = "Sonatype Snapshots"
+		url = uri("https://oss.sonatype.org/content/repositories/snapshots")
+	}
+	
+	maven {
+		name = "Kotlin Discord"
+		url = uri("https://maven.kotlindiscord.com/repository/maven-public/")
+	}
 }
 
-// Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
+dependencies {
+	implementation("com.kotlindiscord.kord.extensions:kord-extensions:1.5.3-20220422.152027-6")
+}
+
 intellij {
-	version.set("2021.3")
-	type.set("IC") // Target IDE Platform
+	version.set("2022.1")
+	type.set("IC")
 	
-	plugins.set(listOf(/* Plugin Dependencies */))
+	plugins.set(listOf(
+		"java",
+		"com.intellij.gradle",
+		"org.jetbrains.kotlin",
+	))
 }
 
 tasks {
-	// Set the JVM compatibility versions
 	withType<JavaCompile> {
 		sourceCompatibility = "11"
 		targetCompatibility = "11"
