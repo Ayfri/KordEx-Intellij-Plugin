@@ -6,7 +6,7 @@ plugins {
 	id("org.jetbrains.intellij") version "1.5.3"
 }
 
-fun getEnv(envName: String) = System.getenv(envName)
+fun getEnv(envName: String) = System.getenv(envName)?.replace(Regex("\n+"), "")
 
 group = "io.ayfri"
 version = "0.1.0"
@@ -62,8 +62,10 @@ tasks {
 	}
 	
 	signPlugin {
-		certificateChain.set(getEnv("CERTIFICATE_CHAIN"))
-		privateKey.set(getEnv("PRIVATE_KEY"))
+		val certificate = File("keys/chain.crt").readText(Charsets.UTF_8)
+		certificateChain.set(certificate)
+		val key = File("keys/private.pem").readText(Charsets.UTF_8)
+		privateKey.set(key)
 		password.set(getEnv("PRIVATE_KEY_PASSWORD"))
 	}
 	
