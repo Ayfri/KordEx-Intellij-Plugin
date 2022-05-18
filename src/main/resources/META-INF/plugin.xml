@@ -1,12 +1,11 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
-<idea-plugin url="https://github.com/Ayfri/KordEx-Intellij-Plugin">
+<idea-plugin url="https://github.com/Ayfri/KordEx-Intellij-Plugin" require-restart="false">
 	<!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
 	<id>io.ayfri.kordex-plugin</id>
 	
 	<!-- Public plugin name should be written in Title Case.
 		 Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
 	<name>KordEx Utils</name>
-	<version>0.1.0</version>
 	
 	<!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
 	<vendor email="pierre.ayfri@gmail.com" url="https://github.com/Ayfri">Ayfri</vendor>
@@ -16,7 +15,7 @@
 		 Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
 	<description>
 		<![CDATA[
-	    <p> This plugins adds helper features for developing Discord bots using <a href="https://github.com/kordex/KordEx">KordEx</a>. </p>
+	    <p> This plugins adds helper features for developing Discord bots using <a href="https://github.com/Kord-Extensions/kord-extensions">KordEx</a>. </p>
 	    
 	    <p> It currently have the following features: </p>
 		<ul>
@@ -41,6 +40,14 @@
 		<![CDATA[
 		<ul>
 			<li>
+				<b>0.1.2</b>
+				<p>
+					Fix link of KordEx.
+				</p>
+				<b>0.1.1</b>
+				<p>
+					Fix compilation of plugin.
+				<p/>
 				<b>0.1.0</b>
 				<p>
 					Add gutter to commands & events.<br>

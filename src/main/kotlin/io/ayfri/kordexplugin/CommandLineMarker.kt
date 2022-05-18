@@ -9,7 +9,6 @@ import com.intellij.psi.util.elementType
 import com.kotlindiscord.kord.extensions.extensions.Extension
 import io.ayfri.kordexplugin.Icons.getIconForCommand
 import org.jetbrains.kotlin.idea.caches.resolve.resolveToCall
-import org.jetbrains.kotlin.idea.inspections.findExistingEditor
 import org.jetbrains.kotlin.js.descriptorUtils.getJetTypeFqName
 import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.psi.KtCallExpression
@@ -18,7 +17,6 @@ import org.jetbrains.kotlin.psi.psiUtil.findDescendantOfType
 import org.jetbrains.kotlin.resolve.calls.model.ResolvedCall
 import org.jetbrains.kotlin.resolve.lazy.BodyResolveMode
 import org.jetbrains.kotlin.types.typeUtil.getImmediateSuperclassNotAny
-import org.koin.ext.getFullName
 import javax.swing.Icon
 
 
@@ -67,7 +65,7 @@ class CommandLineMarker : LineMarkerProviderDescriptor() {
 			val kotlinType = call.extensionReceiver?.type ?: return false
 			val parentType = kotlinType.getImmediateSuperclassNotAny() ?: return false
 			
-			if (parentType.getJetTypeFqName(false) == Extension::class.getFullName()) return true
+			if (parentType.getJetTypeFqName(false) == Extension::class.qualifiedName) return true
 			
 			return parentType.getJetTypeFqName(false) == "com.kotlindiscord.kord.extensions.commands.application.slash.SlashCommand"
 		}
