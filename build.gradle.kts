@@ -1,15 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.internal.os.OperatingSystem
 
 plugins {
 	java
 	kotlin("jvm") version "1.6.21"
-	id("org.jetbrains.intellij") version "1.5.3"
+	id("org.jetbrains.intellij") version "1.5.2"
 }
 
 fun getEnv(envName: String) = System.getenv(envName)?.replace(Regex("\n+"), "")
 
 group = "io.ayfri"
-version = "0.1.0"
+version = "0.1.1"
 
 repositories {
 	google()
@@ -71,5 +72,26 @@ tasks {
 	
 	publishPlugin {
 		token.set(getEnv("PUBLISH_TOKEN"))
+	}
+	
+	buildSearchableOptions {
+		// https://youtrack.jetbrains.com/issue/IDEA-210683
+		jvmArgs(
+			"--illegal-access=deny",
+			"--add-exports=java.base/jdk.internal.vm=ALL-UNNAMED",
+			"--add-opens=java.base/java.lang=ALL-UNNAMED",
+			"--add-opens=java.base/java.util=ALL-UNNAMED",
+			"--add-opens=java.desktop/java.awt.event=ALL-UNNAMED",
+			"--add-opens=java.desktop/java.awt=ALL-UNNAMED",
+			"--add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED",
+			"--add-opens=java.desktop/javax.swing=ALL-UNNAMED",
+			"--add-opens=java.desktop/sun.awt=ALL-UNNAMED",
+			"--add-opens=java.desktop/sun.font=ALL-UNNAMED",
+			"--add-opens=java.desktop/sun.swing=ALL-UNNAMED"
+		)
+		
+		if (OperatingSystem.current().isMacOsX) {
+			jvmArgs("--add-opens=java.desktop/com.apple.eawt.event=ALL-UNNAMED")
+		}
 	}
 }
