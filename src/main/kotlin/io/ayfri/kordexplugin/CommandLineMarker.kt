@@ -5,12 +5,14 @@ import com.intellij.codeInsight.daemon.LineMarkerInfo
 import com.intellij.codeInsight.daemon.LineMarkerProviderDescriptor
 import com.intellij.openapi.editor.markup.GutterIconRenderer
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.kotlindiscord.kord.extensions.extensions.Extension
 import io.ayfri.kordexplugin.Icons.getIconForCommand
 import org.jetbrains.kotlin.idea.caches.resolve.resolveToCall
 import org.jetbrains.kotlin.js.descriptorUtils.getJetTypeFqName
 import org.jetbrains.kotlin.lexer.KtTokens
+import org.jetbrains.kotlin.psi.KtBinaryExpression
 import org.jetbrains.kotlin.psi.KtCallExpression
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression
 import org.jetbrains.kotlin.psi.psiUtil.findDescendantOfType
@@ -37,12 +39,39 @@ class CommandLineMarker : LineMarkerProviderDescriptor() {
 			val icon = if (method == "event") Icons.GEAR_BLUE else getIconForCommand(method.lowercase())
 			val identifier = expression.findDescendantOfType<PsiElement> { it.elementType == KtTokens.IDENTIFIER } ?: return@let
 			
-			return@getLineMarkerInfo gutter(identifier, icon, method) { _, _ ->
+			val methodFancyDisplay = method.replace(Regex("([a-z](?=[A-Z]))"), "$1 ").replace(Regex("(\\b[a-z])")) { it.value.uppercase() }
+			val name = expression.findName()
+			val description = expression.findDescription()
+			
+			val gutterDescription =
+				"""$methodFancyDisplay
+				name = $name
+				description = $description
+				""".trimIndent()
+			
+			return@getLineMarkerInfo gutter(identifier, icon, gutterDescription) { _, _ ->
 				GoToActionAction.moveCursorToAction(expression)
 			}
 		}
 		
 		return null
+	}
+	
+	fun KtCallExpression.findName(): String? {
+		return PsiTreeUtil.findChildrenOfAnyType(this, KtBinaryExpression::class.java).firstOrNull {
+			logger.info("searching name: ${it.text}")
+			it.operationToken == KtTokens.EQ && it.left?.text == "name"
+		}?.let {
+			return@let it.right?.text
+		}
+	}
+	
+	fun KtCallExpression.findDescription(): String? {
+		return PsiTreeUtil.findChildrenOfAnyType(this, KtBinaryExpression::class.java).firstOrNull {
+			it.operationToken == KtTokens.EQ && it.left?.text == "description"
+		}?.let {
+			return@let it.right?.text
+		}
 	}
 	
 	fun <T : PsiElement> gutter(
