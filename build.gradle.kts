@@ -10,7 +10,7 @@ plugins {
 fun getEnv(envName: String) = System.getenv(envName)?.replace(Regex("\n+"), "")
 
 group = "io.ayfri"
-version = "0.1.2"
+version = "0.2.0"
 
 repositories {
 	google()
@@ -54,6 +54,11 @@ tasks {
 	
 	withType<KotlinCompile> {
 		kotlinOptions.jvmTarget = "11"
+		
+		// Delete build/tmp to update plugin in Intellij sandbox
+		delete {
+			delete(file("build/tmp"))
+		}
 	}
 	
 	patchPluginXml {
