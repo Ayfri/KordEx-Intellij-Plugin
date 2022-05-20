@@ -15,14 +15,14 @@
 		 Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
 	<description>
 		<![CDATA[
-	    <p> This plugins adds helper features for developing Discord bots using <a href="https://github.com/Kord-Extensions/kord-extensions">KordEx</a>. </p>
-	    
-	    <p> It currently have the following features: </p>
+		<p> This plugins adds helper features for developing Discord bots using <a href="https://github.com/Kord-Extensions/kord-extensions">KordEx</a>. </p>
+		
+		<p>It currently has the following features:</p>
 		<ul>
-			<li> Adds gutter icons to Commands and Events, blue is for public, gold is for ephemeral, each type has its proper icon. </li>
-			<li> Moves you to <code>action</code> DSL when you click on it. </li>
+			<li> Adds gutter icons to Commands and Events, blue is for public, gold is for ephemeral, each type has its proper icon.</li>
+			<li> Moves you to <code>action</code> DSL when you click on it.</li>
 		</ul>
-	    ]]>
+		   ]]>
 	</description>
 	
 	<!-- Product and plugin compatibility requirements.
@@ -54,7 +54,7 @@
 					Clicking on it moves you to <code>action</code> method.
 				<p>
 			</li>
-		<ul>
+			<ul>
 		]]>
 	</change-notes>
 	

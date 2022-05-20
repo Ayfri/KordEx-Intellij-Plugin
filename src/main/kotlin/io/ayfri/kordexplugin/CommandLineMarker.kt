@@ -31,9 +31,9 @@ class CommandLineMarker : LineMarkerProviderDescriptor() {
 		
 		if (expression.firstChild !is KtNameReferenceExpression) return null
 		
-		expression.resolveToCall(BodyResolveMode.PARTIAL)?.let {
-			if (!isValidKordExExpression(it)) return@let
-			val method = it.resultingDescriptor.name.asString()
+		expression.resolveToCall(BodyResolveMode.PARTIAL)?.let { call ->
+			if (!isValidKordExExpression(call)) return@let
+			val method = call.resultingDescriptor.name.asString()
 			val icon = if (method == "event") Icons.GEAR_BLUE else getIconForCommand(method.lowercase())
 			val identifier = expression.findDescendantOfType<PsiElement> { it.elementType == KtTokens.IDENTIFIER } ?: return@let
 			

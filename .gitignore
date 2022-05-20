@@ -44,5 +44,8 @@ bin/
 ### Intellij DevKit ###
 .run
 
+### Intellij IDEA ###
+.idea
+
 ### Keys ###
 keys
