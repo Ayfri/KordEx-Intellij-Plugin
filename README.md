@@ -1,5 +1,8 @@
 # KordEx-Intellij-Plugin
 
+![Downloads](https://img.shields.io/jetbrains/plugin/d/io.ayfri.kordex-plugin)
+![Version](https://img.shields.io/jetbrains/plugin/v/io.ayfri.kordex-plugin)
+
 An intellij plugin to help you develop with the Discord Library [KordEx](https://github.com/Kord-Extensions/kord-extensions).
 
 ![Preview](resources/preview.png)
