@@ -90,13 +90,19 @@ class CommandLineMarker : LineMarkerProviderDescriptor() {
 	}
 	
 	companion object {
+		private const val EXTENSION_CLASS = "com.kotlindiscord.kord.extensions.extensions.Extension"
+		private const val SLASH_COMMAND = "com.kotlindiscord.kord.extensions.commands.application.slash.SlashCommand"
+		
 		fun isValidKordExExpression(call: ResolvedCall<*>): Boolean {
 			val kotlinType = call.extensionReceiver?.type ?: return false
 			val parentType = kotlinType.getImmediateSuperclassNotAny() ?: return false
+			val method = call.resultingDescriptor.name.asString()
 			
-			if (parentType.getJetTypeFqName(false) == Extension::class.qualifiedName) return true
+			if (!method.contains(Regex("command|event", RegexOption.IGNORE_CASE))) return false
 			
-			return parentType.getJetTypeFqName(false) == "com.kotlindiscord.kord.extensions.commands.application.slash.SlashCommand"
+			if (parentType.getJetTypeFqName(false) == EXTENSION_CLASS) return true
+			
+			return parentType.getJetTypeFqName(false) == SLASH_COMMAND
 		}
 	}
 }
