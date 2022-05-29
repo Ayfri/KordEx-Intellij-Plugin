@@ -14,6 +14,7 @@ import org.jetbrains.kotlin.js.descriptorUtils.getJetTypeFqName
 import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.psi.KtBinaryExpression
 import org.jetbrains.kotlin.psi.KtCallExpression
+import org.jetbrains.kotlin.psi.KtExpression
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression
 import org.jetbrains.kotlin.psi.psiUtil.findDescendantOfType
 import org.jetbrains.kotlin.resolve.calls.model.ResolvedCall
@@ -43,11 +44,19 @@ class CommandLineMarker : LineMarkerProviderDescriptor() {
 			val name = expression.findName()
 			val description = expression.findDescription()
 			
-			val gutterDescription =
-				"""$methodFancyDisplay
-				name = $name
-				description = $description
-				""".trimIndent()
+			var gutterDescription = methodFancyDisplay
+			
+			name?.let {
+				gutterDescription += "\n${link(name, "name")} = ${it.text}"
+			}
+			
+			description?.let {
+				gutterDescription += "\n${link(description, "description")} = ${it.text}"
+			}
+			
+			GoToActionAction.findActionElement(expression)?.let { action ->
+				gutterDescription += "\n\n${link(action, "Go to Action")}"
+			}
 			
 			return@getLineMarkerInfo gutter(identifier, icon, gutterDescription) { _, _ ->
 				GoToActionAction.moveCursorToAction(expression)
@@ -57,20 +66,20 @@ class CommandLineMarker : LineMarkerProviderDescriptor() {
 		return null
 	}
 	
-	fun KtCallExpression.findName(): String? {
+	fun KtCallExpression.findName(): KtExpression? {
 		return PsiTreeUtil.findChildrenOfAnyType(this, KtBinaryExpression::class.java).firstOrNull {
 			logger.info("searching name: ${it.text}")
 			it.operationToken == KtTokens.EQ && it.left?.text == "name"
 		}?.let {
-			return@let it.right?.text
+			return@let it.right
 		}
 	}
 	
-	fun KtCallExpression.findDescription(): String? {
+	fun KtCallExpression.findDescription(): KtExpression? {
 		return PsiTreeUtil.findChildrenOfAnyType(this, KtBinaryExpression::class.java).firstOrNull {
 			it.operationToken == KtTokens.EQ && it.left?.text == "description"
 		}?.let {
-			return@let it.right?.text
+			return@let it.right
 		}
 	}
 	
