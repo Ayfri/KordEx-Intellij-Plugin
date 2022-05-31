@@ -22,6 +22,14 @@
 			<li> Adds gutter icons to Commands and Events, blue is for public, gold is for ephemeral, each type has its proper icon.</li>
 			<li> Moves you to <code>action</code> DSL when you click on it.</li>
 		</ul>
+		
+		<p>
+			Officially supporting the following versions of KordEx:<br>
+			1.5.3-SNAPSHOT
+		</p>
+		
+		<em>It may work on older versions but it is not guaranteed.</em>
+		
 		   ]]>
 	</description>
 	
