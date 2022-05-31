@@ -14,24 +14,6 @@ version = "0.2.0"
 repositories {
 	google()
 	mavenCentral()
-	
-	maven {
-		name = "Sonatype Snapshots"
-		url = uri("https://oss.sonatype.org/content/repositories/snapshots")
-	}
-	
-	maven {
-		name = "Kotlin Discord"
-		url = uri("https://maven.kotlindiscord.com/repository/maven-public/")
-	}
-}
-
-dependencies {
-	implementation("com.kotlindiscord.kord.extensions:kord-extensions:1.5.3-20220422.152027-6") {
-		version {
-			require("1.5.3-20220422.152027-6")
-		}
-	}
 }
 
 intellij {

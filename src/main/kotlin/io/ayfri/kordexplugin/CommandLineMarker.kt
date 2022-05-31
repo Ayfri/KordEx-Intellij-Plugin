@@ -7,7 +7,6 @@ import com.intellij.openapi.editor.markup.GutterIconRenderer
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
-import com.kotlindiscord.kord.extensions.extensions.Extension
 import io.ayfri.kordexplugin.Icons.getIconForCommand
 import org.jetbrains.kotlin.idea.caches.resolve.resolveToCall
 import org.jetbrains.kotlin.js.descriptorUtils.getJetTypeFqName
