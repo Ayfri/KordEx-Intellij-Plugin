@@ -40,21 +40,32 @@
 		<![CDATA[
 		<ul>
 			<li>
+				<b>0.2.0</b>
+				<p>
+					Hovering gutter now shows you the name & description of the command/event and let you click to jump to the action DSL.<br>
+					Removed the KordEx dependency to reduce the size of the plugin.
+				</p>
+			</li>
+			<li>
 				<b>0.1.2</b>
 				<p>
 					Fix link of KordEx.
 				</p>
+			</li>
+			<li>
 				<b>0.1.1</b>
 				<p>
 					Fix compilation of plugin.
-				<p/>
+				</p>
+			</li>
+			<li>
 				<b>0.1.0</b>
 				<p>
 					Add gutter to commands & events.<br>
 					Clicking on it moves you to <code>action</code> method.
-				<p>
+				</p>
 			</li>
-			<ul>
+		</ul>
 		]]>
 	</change-notes>
 	
