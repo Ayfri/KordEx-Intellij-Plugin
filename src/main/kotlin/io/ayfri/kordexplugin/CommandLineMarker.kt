@@ -7,13 +7,14 @@ import com.intellij.openapi.editor.markup.GutterIconRenderer
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
+import com.jetbrains.rd.util.firstOrNull
 import io.ayfri.kordexplugin.Icons.getIconForCommand
+import org.jetbrains.kotlin.idea.base.utils.fqname.fqName
 import org.jetbrains.kotlin.idea.caches.resolve.resolveToCall
 import org.jetbrains.kotlin.js.descriptorUtils.getJetTypeFqName
 import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.psi.KtBinaryExpression
 import org.jetbrains.kotlin.psi.KtCallExpression
-import org.jetbrains.kotlin.psi.KtExpression
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression
 import org.jetbrains.kotlin.psi.psiUtil.findDescendantOfType
 import org.jetbrains.kotlin.resolve.calls.model.ResolvedCall
@@ -39,18 +40,32 @@ class CommandLineMarker : LineMarkerProviderDescriptor() {
 			val icon = if (method == "event") Icons.GEAR_BLUE else getIconForCommand(method.lowercase())
 			val identifier = expression.findDescendantOfType<PsiElement> { it.elementType == KtTokens.IDENTIFIER } ?: return@let
 			
-			val methodFancyDisplay = method.replace(Regex("([a-z](?=[A-Z]))"), "$1 ").replace(Regex("(\\b[a-z])")) { it.value.uppercase() }
-			val name = expression.findName()
-			val description = expression.findDescription()
+			var gutterDescription: String
 			
-			var gutterDescription = methodFancyDisplay
-			
-			name?.let {
-				gutterDescription += "\n${link(name, "name")} = ${it.text}"
-			}
-			
-			description?.let {
-				gutterDescription += "\n${link(description, "description")} = ${it.text}"
+			when (method) {
+				"event" -> {
+					val firstTypeParameter = call.typeArguments.firstOrNull()?.value ?: return@let
+					val genericMethodType = firstTypeParameter.fqName?.pathSegments()?.lastOrNull()?.asString() ?: return@let
+					val genericTypeFancyDisplay = genericMethodType.replace("Event", " Event")
+					
+					gutterDescription = genericTypeFancyDisplay
+				}
+				
+				else -> {
+					val methodFancyDisplay = method.replace(Regex("([a-z](?=[A-Z]))"), "$1 ").replace(Regex("(\\b[a-z])")) { it.value.uppercase() }
+					val name = expression.findName()
+					val description = expression.findDescription()
+					
+					gutterDescription = methodFancyDisplay
+					
+					name?.let {
+						gutterDescription += "\n${link(name, "name")} = ${it.text}"
+					}
+					
+					description?.let {
+						gutterDescription += "\n${link(description, "description")} = ${it.text}"
+					}
+				}
 			}
 			
 			GoToActionAction.findActionElement(expression)?.let { action ->
@@ -65,37 +80,30 @@ class CommandLineMarker : LineMarkerProviderDescriptor() {
 		return null
 	}
 	
-	fun KtCallExpression.findName(): KtExpression? {
-		return PsiTreeUtil.findChildrenOfAnyType(this, KtBinaryExpression::class.java).firstOrNull {
-			logger.info("searching name: ${it.text}")
-			it.operationToken == KtTokens.EQ && it.left?.text == "name"
-		}?.let {
-			return@let it.right
-		}
+	fun KtCallExpression.findName() = PsiTreeUtil.findChildrenOfAnyType(this, KtBinaryExpression::class.java).firstOrNull {
+		it.operationToken == KtTokens.EQ && it.left?.text == "name"
+	}?.let {
+		return@let it.right
 	}
 	
-	fun KtCallExpression.findDescription(): KtExpression? {
-		return PsiTreeUtil.findChildrenOfAnyType(this, KtBinaryExpression::class.java).firstOrNull {
-			it.operationToken == KtTokens.EQ && it.left?.text == "description"
-		}?.let {
-			return@let it.right
-		}
+	fun KtCallExpression.findDescription() = PsiTreeUtil.findChildrenOfAnyType(this, KtBinaryExpression::class.java).firstOrNull {
+		it.operationToken == KtTokens.EQ && it.left?.text == "description"
+	}?.let {
+		return@let it.right
 	}
 	
 	fun <T : PsiElement> gutter(
 		expression: T,
 		icon: Icon,
 		method: String,
-		onClick: GutterIconNavigationHandler<T> = GutterIconNavigationHandler { _, _ ->  },
-	): LineMarkerInfo<T> {
-		return ActionnableLineMarkerInfo(
-			expression,
-			icon,
-			{ method },
-			{ method },
-			onClick = onClick,
-		)
-	}
+		onClick: GutterIconNavigationHandler<T> = GutterIconNavigationHandler { _, _ -> },
+	) = ActionnableLineMarkerInfo(
+		expression,
+		icon,
+		{ method },
+		{ method },
+		onClick = onClick,
+	)
 	
 	companion object {
 		private const val EXTENSION_CLASS = "com.kotlindiscord.kord.extensions.extensions.Extension"
