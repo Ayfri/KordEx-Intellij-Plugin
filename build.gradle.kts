@@ -2,14 +2,14 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
 	java
-	kotlin("jvm") version "1.6.21"
-	id("org.jetbrains.intellij") version "1.6.0"
+	kotlin("jvm") version "1.7.0"
+	id("org.jetbrains.intellij") version "1.7.0"
 }
 
 fun getEnv(envName: String) = System.getenv(envName)?.replace(Regex("\n+"), "")
 
 group = "io.ayfri"
-version = "0.2.0"
+version = "0.2.1"
 
 repositories {
 	google()
@@ -17,14 +17,16 @@ repositories {
 }
 
 intellij {
-	version.set("2022.1")
+	version.set("2022.2")
 	type.set("IC")
 	
-	plugins.set(listOf(
-		"java",
-		"com.intellij.gradle",
-		"org.jetbrains.kotlin",
-	))
+	plugins.set(
+		listOf(
+			"java",
+			"com.intellij.gradle",
+			"org.jetbrains.kotlin",
+		)
+	)
 }
 
 tasks {
@@ -44,8 +46,8 @@ tasks {
 	
 	patchPluginXml {
 		version.set(project.version.toString())
-		sinceBuild.set("212")
-		untilBuild.set("222.*")
+		sinceBuild.set("213")
+		untilBuild.set("223.*")
 	}
 	
 	signPlugin {
