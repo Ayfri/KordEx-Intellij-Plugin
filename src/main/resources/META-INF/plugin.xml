@@ -25,12 +25,11 @@
 		
 		<p>
 			Officially supporting the following versions of KordEx:<br>
-			1.5.3-SNAPSHOT
+			1.5.3-SNAPSHOT through 1.5.5-SNAPSHOT
 		</p>
 		
-		<em>It may work on older versions but it is not guaranteed.</em>
-		
-		   ]]>
+		<em>It may work on older versions, but it is not guaranteed.</em>
+		]]>
 	</description>
 	
 	<!-- Product and plugin compatibility requirements.
@@ -47,6 +46,13 @@
 	<change-notes>
 		<![CDATA[
 		<ul>
+			<li>
+				<b>0.2.1</b>
+				<p>
+					Hovering an event now shows the event name.
+					Updated minimum Intellij version to 2021.3 and maximum to 2022.3.
+				</p>
+			</li>
 			<li>
 				<b>0.2.0</b>
 				<p>
