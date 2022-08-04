@@ -5,8 +5,6 @@
 
 An intellij plugin to help you develop with the Discord Library [KordEx](https://github.com/Kord-Extensions/kord-extensions).
 
-<iframe frameborder="none" width="245px" height="48px" src="https://plugins.jetbrains.com/embeddable/install/19163"></iframe>
-
 ![Preview](resources/preview.png)
 
 It currently has the following features:
