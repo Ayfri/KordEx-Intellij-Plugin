@@ -41,6 +41,7 @@
 		 Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
 	<extensions defaultExtensionNs="com.intellij">
 		<codeInsight.lineMarkerProvider implementationClass="io.ayfri.kordexplugin.CommandLineMarker" language="kotlin" />
+		<annotator implementationClass="io.ayfri.kordexplugin.CommandTranslationAnnotator" language="kotlin" />
 	</extensions>
 	
 	<change-notes>
