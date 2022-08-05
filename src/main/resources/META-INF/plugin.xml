@@ -48,6 +48,13 @@
 		<![CDATA[
 		<ul>
 			<li>
+				<b>0.3.0</b>
+				<p>
+					Hovering a translation key using a string literal will show the translation in the tooltip.
+					Also warns you if no bundle is set.
+				</p>
+			</li>
+			<li>
 				<b>0.2.1</b>
 				<p>
 					Hovering an event now shows the event name.
