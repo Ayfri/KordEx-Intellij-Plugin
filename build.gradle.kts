@@ -9,7 +9,7 @@ plugins {
 fun getEnv(envName: String) = System.getenv(envName)?.replace(Regex("\n+"), "")
 
 group = "io.ayfri"
-version = "0.2.1"
+version = "0.3.0"
 
 repositories {
 	google()
