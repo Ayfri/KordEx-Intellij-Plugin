@@ -24,6 +24,7 @@ intellij {
 		listOf(
 			"java",
 			"com.intellij.gradle",
+			"com.intellij.properties",
 			"org.jetbrains.kotlin",
 		)
 	)
