@@ -80,18 +80,6 @@ class CommandLineMarker : LineMarkerProviderDescriptor() {
 		return null
 	}
 	
-	fun KtCallExpression.findName() = PsiTreeUtil.findChildrenOfAnyType(this, KtBinaryExpression::class.java).firstOrNull {
-		it.operationToken == KtTokens.EQ && it.left?.text == "name"
-	}?.let {
-		return@let it.right
-	}
-	
-	fun KtCallExpression.findDescription() = PsiTreeUtil.findChildrenOfAnyType(this, KtBinaryExpression::class.java).firstOrNull {
-		it.operationToken == KtTokens.EQ && it.left?.text == "description"
-	}?.let {
-		return@let it.right
-	}
-	
 	fun <T : PsiElement> gutter(
 		expression: T,
 		icon: Icon,
@@ -115,7 +103,6 @@ class CommandLineMarker : LineMarkerProviderDescriptor() {
 			val method = call.resultingDescriptor.name.asString()
 			
 			if (!method.contains(Regex("command|event", RegexOption.IGNORE_CASE))) return false
-			
 			if (parentType.getJetTypeFqName(false) == EXTENSION_CLASS) return true
 			
 			return parentType.getJetTypeFqName(false) == SLASH_COMMAND
@@ -139,3 +126,21 @@ class ActionnableLineMarkerInfo<T : PsiElement>(
 	alignement,
 	name
 )
+
+fun KtCallExpression.findName() = PsiTreeUtil.findChildrenOfAnyType(this, KtBinaryExpression::class.java).firstOrNull {
+	it.operationToken == KtTokens.EQ && it.left?.text == "name"
+}?.let {
+	return@let it.right
+}
+
+fun KtCallExpression.findDescription() = PsiTreeUtil.findChildrenOfAnyType(this, KtBinaryExpression::class.java).firstOrNull {
+	it.operationToken == KtTokens.EQ && it.left?.text == "description"
+}?.let {
+	return@let it.right
+}
+
+fun KtCallExpression.findAliasKey() = PsiTreeUtil.findChildrenOfAnyType(this, KtBinaryExpression::class.java).firstOrNull {
+	it.operationToken == KtTokens.EQ && it.left?.text == "aliasKey"
+}?.let {
+	return@let it.right
+}
