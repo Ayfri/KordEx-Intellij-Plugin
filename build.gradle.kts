@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	java
 	kotlin("jvm") version "1.7.0"
-	id("org.jetbrains.intellij") version "1.7.0"
+	id("org.jetbrains.intellij") version "1.8.0"
 }
 
 fun getEnv(envName: String) = System.getenv(envName)?.replace(Regex("\n+"), "")
