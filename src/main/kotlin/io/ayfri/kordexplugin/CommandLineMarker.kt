@@ -15,6 +15,7 @@ import org.jetbrains.kotlin.js.descriptorUtils.getJetTypeFqName
 import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.psi.KtBinaryExpression
 import org.jetbrains.kotlin.psi.KtCallExpression
+import org.jetbrains.kotlin.psi.KtExpression
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression
 import org.jetbrains.kotlin.psi.psiUtil.findDescendantOfType
 import org.jetbrains.kotlin.resolve.calls.model.ResolvedCall
@@ -25,6 +26,8 @@ import javax.swing.Icon
 
 class CommandLineMarker : LineMarkerProviderDescriptor() {
 	override fun getName() = "Command"
+	
+	private fun displayFancyLink(name: String, target: KtExpression) = "\n${link(target, name)} = ${cacheTranslations[target.text]?.value ?: target.text}"
 	
 	override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<*>? {
 		val expression = when (element) {
@@ -59,11 +62,11 @@ class CommandLineMarker : LineMarkerProviderDescriptor() {
 					gutterDescription = methodFancyDisplay
 					
 					name?.let {
-						gutterDescription += "\n${link(name, "name")} = ${it.text}"
+						gutterDescription += displayFancyLink("name", it)
 					}
 					
 					description?.let {
-						gutterDescription += "\n${link(description, "description")} = ${it.text}"
+						gutterDescription += displayFancyLink("description", it)
 					}
 				}
 			}

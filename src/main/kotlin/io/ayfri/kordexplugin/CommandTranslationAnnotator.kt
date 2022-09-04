@@ -88,7 +88,13 @@ class CommandTranslationAnnotator : Annotator {
 				bundleFileName = "${it.second}.properties"
 			}
 			
-			val foundProperty = module.searchPropertyInRB(expression.text.replace("\"", ""), bundleDirectoryName, bundleFileName)
+			
+			val foundProperty = cacheTranslations.getOrElse(expression.text) {
+				module.searchPropertyInRB(expression.text.replace("\"", ""), bundleDirectoryName, bundleFileName)?.also {
+					cacheTranslations[expression.text] = it
+				}
+			}
+			
 			val tooltip =
 				when {
 					foundProperty != null ->
