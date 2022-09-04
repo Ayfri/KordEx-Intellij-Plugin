@@ -9,7 +9,7 @@ plugins {
 fun getEnv(envName: String) = System.getenv(envName)?.replace(Regex("\n+"), "")
 
 group = "io.ayfri"
-version = "0.3.0"
+version = "0.4.0"
 
 repositories {
 	google()
@@ -47,7 +47,7 @@ tasks {
 	
 	patchPluginXml {
 		version.set(project.version.toString())
-		sinceBuild.set("213")
+		sinceBuild.set("221")
 		untilBuild.set("223.*")
 	}
 	
