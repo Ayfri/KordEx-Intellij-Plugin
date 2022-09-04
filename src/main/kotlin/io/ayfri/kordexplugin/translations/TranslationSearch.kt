@@ -1,4 +1,4 @@
-package io.ayfri.kordexplugin
+package io.ayfri.kordexplugin.translations
 
 import com.intellij.lang.properties.IProperty
 import com.intellij.lang.properties.PropertiesFileType

@@ -1,4 +1,4 @@
-package io.ayfri.kordexplugin
+package io.ayfri.kordexplugin.features
 
 import com.intellij.codeInsight.daemon.GutterIconNavigationHandler
 import com.intellij.codeInsight.daemon.LineMarkerInfo
@@ -8,7 +8,10 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.jetbrains.rd.util.firstOrNull
+import io.ayfri.kordexplugin.Icons
 import io.ayfri.kordexplugin.Icons.getIconForCommand
+import io.ayfri.kordexplugin.link
+import io.ayfri.kordexplugin.translations.cacheTranslations
 import org.jetbrains.kotlin.idea.base.utils.fqname.fqName
 import org.jetbrains.kotlin.idea.caches.resolve.resolveToCall
 import org.jetbrains.kotlin.js.descriptorUtils.getJetTypeFqName

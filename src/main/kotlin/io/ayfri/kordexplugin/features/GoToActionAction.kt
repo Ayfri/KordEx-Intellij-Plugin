@@ -1,4 +1,4 @@
-package io.ayfri.kordexplugin
+package io.ayfri.kordexplugin.features
 
 import com.intellij.featureStatistics.FeatureUsageTracker
 import com.intellij.openapi.actionSystem.AnAction

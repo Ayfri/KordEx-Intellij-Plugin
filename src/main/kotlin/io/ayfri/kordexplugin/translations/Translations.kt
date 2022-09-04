@@ -1,10 +1,11 @@
-package io.ayfri.kordexplugin
+package io.ayfri.kordexplugin.translations
 
 import com.intellij.lang.properties.IProperty
 import com.intellij.lang.properties.psi.PropertiesFile
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl
 import com.intellij.openapi.vfs.newvfs.BulkFileListener
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent
+import io.ayfri.kordexplugin.logger
 
 /**
  * Cache for translations, mapped by "key" -> "property".

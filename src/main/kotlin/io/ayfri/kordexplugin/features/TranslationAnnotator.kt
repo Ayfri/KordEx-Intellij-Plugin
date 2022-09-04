@@ -1,4 +1,4 @@
-package io.ayfri.kordexplugin
+package io.ayfri.kordexplugin.features
 
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.lang.annotation.AnnotationHolder
@@ -9,6 +9,9 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.containers.addAllIfNotNull
+import io.ayfri.kordexplugin.link
+import io.ayfri.kordexplugin.translations.cacheTranslations
+import io.ayfri.kordexplugin.translations.searchPropertyInRB
 import io.ktor.util.*
 import org.jetbrains.kotlin.idea.caches.resolve.resolveToCall
 import org.jetbrains.kotlin.idea.util.module
@@ -20,7 +23,7 @@ import org.jetbrains.kotlin.resolve.descriptorUtil.fqNameSafe
 import org.jetbrains.kotlin.resolve.descriptorUtil.overriddenTreeUniqueAsSequence
 import org.jetbrains.kotlin.resolve.lazy.BodyResolveMode
 
-class CommandTranslationAnnotator : Annotator {
+class TranslationAnnotator : Annotator {
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
 		val expression = when (element) {
 			is KtCallExpression -> element
