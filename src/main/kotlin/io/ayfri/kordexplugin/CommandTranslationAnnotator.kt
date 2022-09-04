@@ -8,6 +8,7 @@ import com.intellij.openapi.module.Module
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.parentOfType
+import com.intellij.util.containers.addAllIfNotNull
 import io.ktor.util.*
 import org.jetbrains.kotlin.idea.caches.resolve.resolveToCall
 import org.jetbrains.kotlin.idea.util.module
@@ -37,20 +38,24 @@ class CommandTranslationAnnotator : Annotator {
 		}
 		
 		expression.resolveToCall(BodyResolveMode.PARTIAL)?.let { call ->
+			val expressionsToResolve = mutableListOf<KtElement?>()
 			val qualifiedName = call.resultingDescriptor.overriddenTreeUniqueAsSequence(true).last().fqNameSafe.asString()
-			if (!CommandLineMarker.isValidKordExExpression(call) && TRANSLATE_FN_PATHS.none { it == qualifiedName }) return@let
 			
-			val expressionsToResolve = mutableListOf(expression.findName(), expression.findDescription())
-			
-			val methodName = call.resultingDescriptor.name.asString()
-			expressionsToResolve += when (methodName) {
-				"chatCommand" -> expression.findAliasKey()
-				"translate", "respondTranslated" -> call.valueArgumentsByIndex?.get(0)?.arguments?.firstOrNull()?.getArgumentExpression()
-				else -> null
+			when {
+				CommandLineMarker.isValidKordExExpression(call) -> {
+					expressionsToResolve.addAllIfNotNull(expression.findName(), expression.findDescription())
+					if (qualifiedName.endsWith("chatCommand")) expressionsToResolve += expression.findAliasKey()
+				}
+				
+				TRANSLATE_FN_PATHS.any { it == qualifiedName } -> {
+					expressionsToResolve += call.valueArgumentsByIndex?.firstOrNull()?.arguments?.firstOrNull()?.getArgumentExpression()
+				}
+				
+				else -> return@let
 			}
 			
 			expressionsToResolve.filterNotNull().forEach {
-				createTranslationAnnotation(holder, module, it, bundleName, methodName)
+				createTranslationAnnotation(holder, module, it, bundleName, qualifiedName.substringAfterLast("."))
 			}
 		}
 	}
