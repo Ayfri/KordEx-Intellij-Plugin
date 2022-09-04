@@ -37,13 +37,6 @@
 	<depends>com.intellij.modules.platform</depends>
 	<depends>org.jetbrains.kotlin</depends>
 	
-	<!-- Extension points defined by the plugin.
-		 Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
-	<extensions defaultExtensionNs="com.intellij">
-		<codeInsight.lineMarkerProvider implementationClass="io.ayfri.kordexplugin.CommandLineMarker" language="kotlin" />
-		<annotator implementationClass="io.ayfri.kordexplugin.CommandTranslationAnnotator" language="kotlin" />
-	</extensions>
-	
 	<change-notes>
 		<![CDATA[
 		<ul>
@@ -101,4 +94,16 @@
 			<add-to-group group-id="NavbarPopupMenu" />
 		</action>
 	</actions>
+	
+	<applicationListeners>
+		<listener class="io.ayfri.kordexplugin.TranslationsListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener" />
+	</applicationListeners>
+	
+	<!-- Extension points defined by the plugin.
+		 Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+	<extensions defaultExtensionNs="com.intellij">
+		<codeInsight.lineMarkerProvider implementationClass="io.ayfri.kordexplugin.CommandLineMarker" language="kotlin" />
+		<annotator implementationClass="io.ayfri.kordexplugin.CommandTranslationAnnotator" language="kotlin" />
+	</extensions>
+
 </idea-plugin>
