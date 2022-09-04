@@ -41,6 +41,16 @@
 		<![CDATA[
 		<ul>
 			<li>
+				<b>0.4.0</b>
+				<p>
+					Add aliasKey from chatCommand to gutter icon tooltip.
+					Listen to file changes to update translations.
+					Show translations into the gutter icon tooltip.
+					Remove support to IntelliJ 2021.3.
+				</p>
+			</li>
+			
+			<li>
 				<b>0.3.0</b>
 				<p>
 					Hovering a translation key using a string literal will show the translation in the tooltip.
