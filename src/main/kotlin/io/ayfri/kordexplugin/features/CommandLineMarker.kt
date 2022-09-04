@@ -59,17 +59,20 @@ class CommandLineMarker : LineMarkerProviderDescriptor() {
 				
 				else -> {
 					val methodFancyDisplay = method.replace(Regex("([a-z](?=[A-Z]))"), "$1 ").replace(Regex("(\\b[a-z])")) { it.value.uppercase() }
-					val name = expression.findName()
-					val description = expression.findDescription()
-					
 					gutterDescription = methodFancyDisplay
 					
-					name?.let {
+					expression.findName()?.let {
 						gutterDescription += displayFancyLink("name", it)
 					}
 					
-					description?.let {
+					expression.findDescription()?.let {
 						gutterDescription += displayFancyLink("description", it)
+					}
+					
+					if (method == "chatCommand") {
+						expression.findAliasKey()?.let {
+							gutterDescription += displayFancyLink("aliasKey", it)
+						}
 					}
 				}
 			}
