@@ -86,8 +86,8 @@
 	
 	<actions>
 		<action
-			id="io.ayfri.kordexplugin.GoToActionAction"
-			class="io.ayfri.kordexplugin.GoToActionAction"
+			id="io.ayfri.kordexplugin.features.GoToActionAction"
+			class="io.ayfri.kordexplugin.features.GoToActionAction"
 			text="Go to Action"
 			description="Moves the cursor to the action of the actual command or event."
 		>
@@ -96,14 +96,14 @@
 	</actions>
 	
 	<applicationListeners>
-		<listener class="io.ayfri.kordexplugin.TranslationsListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener" />
+		<listener class="io.ayfri.kordexplugin.translations.TranslationsListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener" />
 	</applicationListeners>
 	
 	<!-- Extension points defined by the plugin.
 		 Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
 	<extensions defaultExtensionNs="com.intellij">
-		<codeInsight.lineMarkerProvider implementationClass="io.ayfri.kordexplugin.CommandLineMarker" language="kotlin" />
-		<annotator implementationClass="io.ayfri.kordexplugin.CommandTranslationAnnotator" language="kotlin" />
+		<codeInsight.lineMarkerProvider implementationClass="io.ayfri.kordexplugin.features.CommandLineMarker" language="kotlin" />
+		<annotator implementationClass="io.ayfri.kordexplugin.features.TranslationAnnotator" language="kotlin" />
 	</extensions>
 
 </idea-plugin>
