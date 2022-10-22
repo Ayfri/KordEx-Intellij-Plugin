@@ -5,7 +5,6 @@ import com.intellij.lang.properties.psi.PropertiesFile
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl
 import com.intellij.openapi.vfs.newvfs.BulkFileListener
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent
-import io.ayfri.kordexplugin.logger
 
 /**
  * Cache for translations, mapped by "key" -> "property".
@@ -23,7 +22,6 @@ class TranslationsListener : BulkFileListener {
 			fileEvent.file?.let {
 				cacheRB.values.forEach { ressourceBundle ->
 					ressourceBundle.propertiesFiles.find {
-						logger.info("File: ${it.virtualFile.name} ${it.virtualFile.path}, fileEvent: ${fileEvent.file?.name} ${fileEvent.file?.path}")
 						it.virtualFile.path == fileEvent.file?.path
 					}?.let {
 						return@map TranslationEvent(fileEvent, it)

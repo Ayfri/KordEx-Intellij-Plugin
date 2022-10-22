@@ -1,11 +1,13 @@
 package io.ayfri.kordexplugin.features
 
 import com.intellij.featureStatistics.FeatureUsageTracker
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.parentOfType
+import io.ayfri.kordexplugin.isValidKordExExpression
 import org.jetbrains.kotlin.idea.caches.resolve.resolveToCall
 import org.jetbrains.kotlin.psi.KtCallExpression
 
@@ -17,7 +19,7 @@ class GoToActionAction : AnAction() {
 		val commandExpression = psiElement.parentOfType<KtCallExpression>() ?: return
 		
 		commandExpression.resolveToCall()?.let {
-			if (!CommandLineMarker.isValidKordExExpression(it)) return@actionPerformed
+			if (!it.isValidKordExExpression()) return@actionPerformed
 		} ?: return
 		
 		moveCursorToAction(commandExpression)
@@ -29,6 +31,8 @@ class GoToActionAction : AnAction() {
 		
 		e.presentation.isEnabledAndVisible = file?.findElementAt(caret?.offset ?: return) != null
 	}
+	
+	override fun getActionUpdateThread() = ActionUpdateThread.BGT
 	
 	companion object {
 		fun findActionElement(kordExExpression: KtCallExpression) =

@@ -5,25 +5,24 @@ import com.intellij.codeInsight.daemon.LineMarkerInfo
 import com.intellij.codeInsight.daemon.LineMarkerProviderDescriptor
 import com.intellij.openapi.editor.markup.GutterIconRenderer
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.jetbrains.rd.util.firstOrNull
 import io.ayfri.kordexplugin.Icons
 import io.ayfri.kordexplugin.Icons.getIconForCommand
+import io.ayfri.kordexplugin.findAliasKey
+import io.ayfri.kordexplugin.findDescription
+import io.ayfri.kordexplugin.findName
+import io.ayfri.kordexplugin.isValidKordExExpression
 import io.ayfri.kordexplugin.link
 import io.ayfri.kordexplugin.translations.cacheTranslations
 import org.jetbrains.kotlin.idea.base.utils.fqname.fqName
 import org.jetbrains.kotlin.idea.caches.resolve.resolveToCall
-import org.jetbrains.kotlin.js.descriptorUtils.getJetTypeFqName
 import org.jetbrains.kotlin.lexer.KtTokens
-import org.jetbrains.kotlin.psi.KtBinaryExpression
 import org.jetbrains.kotlin.psi.KtCallExpression
 import org.jetbrains.kotlin.psi.KtExpression
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression
 import org.jetbrains.kotlin.psi.psiUtil.findDescendantOfType
-import org.jetbrains.kotlin.resolve.calls.model.ResolvedCall
 import org.jetbrains.kotlin.resolve.lazy.BodyResolveMode
-import org.jetbrains.kotlin.types.typeUtil.getImmediateSuperclassNotAny
 import javax.swing.Icon
 
 
@@ -41,7 +40,7 @@ class CommandLineMarker : LineMarkerProviderDescriptor() {
 		if (expression.firstChild !is KtNameReferenceExpression) return null
 		
 		expression.resolveToCall(BodyResolveMode.PARTIAL)?.let { call ->
-			if (!isValidKordExExpression(call)) return@let
+			if (!call.isValidKordExExpression()) return@let
 			val method = call.resultingDescriptor.name.asString()
 			val icon = if (method == "event") Icons.GEAR_BLUE else getIconForCommand(method.lowercase())
 			val identifier = expression.findDescendantOfType<PsiElement> { it.elementType == KtTokens.IDENTIFIER } ?: return@let
@@ -101,22 +100,6 @@ class CommandLineMarker : LineMarkerProviderDescriptor() {
 		{ method },
 		onClick = onClick,
 	)
-	
-	companion object {
-		private const val EXTENSION_CLASS = "com.kotlindiscord.kord.extensions.extensions.Extension"
-		private const val SLASH_COMMAND = "com.kotlindiscord.kord.extensions.commands.application.slash.SlashCommand"
-		
-		fun isValidKordExExpression(call: ResolvedCall<*>): Boolean {
-			val kotlinType = call.extensionReceiver?.type ?: return false
-			val parentType = kotlinType.getImmediateSuperclassNotAny() ?: return false
-			val method = call.resultingDescriptor.name.asString()
-			
-			if (!method.contains(Regex("command|event", RegexOption.IGNORE_CASE))) return false
-			if (parentType.getJetTypeFqName(false) == EXTENSION_CLASS) return true
-			
-			return parentType.getJetTypeFqName(false) == SLASH_COMMAND
-		}
-	}
 }
 
 class ActionnableLineMarkerInfo<T : PsiElement>(
@@ -135,21 +118,3 @@ class ActionnableLineMarkerInfo<T : PsiElement>(
 	alignement,
 	name
 )
-
-fun KtCallExpression.findName() = PsiTreeUtil.findChildrenOfAnyType(this, KtBinaryExpression::class.java).firstOrNull {
-	it.operationToken == KtTokens.EQ && it.left?.text == "name"
-}?.let {
-	return@let it.right
-}
-
-fun KtCallExpression.findDescription() = PsiTreeUtil.findChildrenOfAnyType(this, KtBinaryExpression::class.java).firstOrNull {
-	it.operationToken == KtTokens.EQ && it.left?.text == "description"
-}?.let {
-	return@let it.right
-}
-
-fun KtCallExpression.findAliasKey() = PsiTreeUtil.findChildrenOfAnyType(this, KtBinaryExpression::class.java).firstOrNull {
-	it.operationToken == KtTokens.EQ && it.left?.text == "aliasKey"
-}?.let {
-	return@let it.right
-}

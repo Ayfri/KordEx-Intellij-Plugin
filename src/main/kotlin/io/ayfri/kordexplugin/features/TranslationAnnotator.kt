@@ -4,11 +4,17 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
+import com.intellij.lang.properties.IProperty
 import com.intellij.openapi.module.Module
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.util.parentOfType
+import com.intellij.psi.util.findTopmostParentInFile
 import com.intellij.util.containers.addAllIfNotNull
+import io.ayfri.kordexplugin.findAliasKey
+import io.ayfri.kordexplugin.findDescription
+import io.ayfri.kordexplugin.findName
+import io.ayfri.kordexplugin.isValidKordExArguments
+import io.ayfri.kordexplugin.isValidKordExExpression
 import io.ayfri.kordexplugin.link
 import io.ayfri.kordexplugin.translations.cacheTranslations
 import io.ayfri.kordexplugin.translations.searchPropertyInRB
@@ -31,35 +37,36 @@ class TranslationAnnotator : Annotator {
 		}
 		
 		val module = expression.module ?: return
-		val ktClass = expression.parentOfType<KtClass>() ?: return
-		val className = ktClass.name ?: return
+		val topLevelClass = expression.findTopmostParentInFile { it is KtClass } as? KtClass ?: return
 		
-		val bundleName = cache.getOrPut(className) {
-			PsiTreeUtil.findChildrenOfType(ktClass, KtProperty::class.java).firstOrNull {
+		val bundleName =
+			PsiTreeUtil.findChildrenOfType(topLevelClass, KtProperty::class.java).firstOrNull {
 				it.text.matches(Regex("override val bundle = .+"))
 			}?.text?.substringAfter("= ")?.replace(Regex("^\"(.+)\"$"), "$1") ?: "kordex"
+		
+		val call = expression.resolveToCall(BodyResolveMode.PARTIAL) ?: return
+		val expressionsToResolve = mutableListOf<KtElement?>()
+		val qualifiedName = call.resultingDescriptor.overriddenTreeUniqueAsSequence(true).last().fqNameSafe.asString()
+		
+		when {
+			call.isValidKordExExpression() -> {
+				expressionsToResolve.addAllIfNotNull(expression.findName(), expression.findDescription())
+				if (qualifiedName.endsWith("chatCommand")) expressionsToResolve += expression.findAliasKey()
+			}
+			
+			call.isValidKordExArguments() -> {
+				expressionsToResolve.addAllIfNotNull(expression.findName(), expression.findDescription())
+			}
+			
+			TRANSLATE_FN_PATHS.any { it == qualifiedName } -> {
+				expressionsToResolve += call.valueArgumentsByIndex?.firstOrNull()?.arguments?.firstOrNull()?.getArgumentExpression()
+			}
+			
+			else -> return
 		}
 		
-		expression.resolveToCall(BodyResolveMode.PARTIAL)?.let { call ->
-			val expressionsToResolve = mutableListOf<KtElement?>()
-			val qualifiedName = call.resultingDescriptor.overriddenTreeUniqueAsSequence(true).last().fqNameSafe.asString()
-			
-			when {
-				CommandLineMarker.isValidKordExExpression(call) -> {
-					expressionsToResolve.addAllIfNotNull(expression.findName(), expression.findDescription())
-					if (qualifiedName.endsWith("chatCommand")) expressionsToResolve += expression.findAliasKey()
-				}
-				
-				TRANSLATE_FN_PATHS.any { it == qualifiedName } -> {
-					expressionsToResolve += call.valueArgumentsByIndex?.firstOrNull()?.arguments?.firstOrNull()?.getArgumentExpression()
-				}
-				
-				else -> return@let
-			}
-			
-			expressionsToResolve.filterNotNull().forEach {
-				createTranslationAnnotation(holder, module, it, bundleName, qualifiedName.substringAfterLast("."))
-			}
+		expressionsToResolve.filterNotNull().forEach {
+			createTranslationAnnotation(holder, module, it, bundleName)
 		}
 	}
 	
@@ -72,14 +79,11 @@ class TranslationAnnotator : Annotator {
 			"com.kotlindiscord.kord.extensions.commands.chat.ChatCommandContext.respondTranslated",
 		)
 		
-		private val cache = mutableMapOf<String, String>()
-		
 		fun createTranslationAnnotation(
 			holder: AnnotationHolder,
 			module: Module,
 			expression: KtElement,
 			bundleName: String,
-			methodName: String?,
 		) {
 			var bundleDirectoryName = bundleName
 			var bundleFileName = "strings.properties"
@@ -91,32 +95,38 @@ class TranslationAnnotator : Annotator {
 				bundleFileName = "${it.second}.properties"
 			}
 			
-			
 			val foundProperty = cacheTranslations.getOrElse(expression.text) {
 				module.searchPropertyInRB(expression.text.replace("\"", ""), bundleDirectoryName, bundleFileName)?.also {
 					cacheTranslations[expression.text] = it
 				}
 			}
 			
+			holder.createTranslationAnnotation(foundProperty, bundleDirectoryName, bundleFileName, /*methodName,*/ expression)
+		}
+		
+		private fun AnnotationHolder.createTranslationAnnotation(
+			foundProperty: IProperty?,
+			bundleDirectoryName: String,
+			bundleFileName: String,
+			expression: KtElement,
+		) {
+			val bundlePath = "$bundleDirectoryName/$bundleFileName"
 			val tooltip =
 				when {
 					foundProperty != null ->
 						"""
-							Command translation got from <strong>${link(foundProperty.psiElement, "$bundleDirectoryName/$bundleFileName")}</strong> bundle file :
+							Command translation got from <strong>${link(foundProperty.psiElement, bundlePath)}</strong> bundle file :
 							
 							<strong>${foundProperty.value?.escapeHTML() ?: "No value set."}</strong>
 						"""
 					
-					methodName?.contains("translate", true) == true ->
-						"""
-							Command translation not found in <strong>$bundleDirectoryName/$bundleFileName</strong> bundle file.
-							${if (bundleDirectoryName == "kordex") "<em>Maybe consider setting a <a href=$BUNDLE_DOC_LINK>bundle</a> name, <code>kordex</code> is the default one and should not be used.<em>" else ""}
-						"""
-					
-					else -> null
-				}?.trimIndent() ?: return
+					else -> """
+								Command translation not found in <strong>$bundlePath</strong> bundle file.
+								${if (bundleDirectoryName == "kordex") "<em>Maybe consider setting a <a href=$BUNDLE_DOC_LINK>bundle</a> name, <code>kordex</code> is the default one and should not be used.<em>" else ""}
+							"""
+				}.trimIndent()
 			
-			holder.newAnnotation(
+			newAnnotation(
 				HighlightSeverity.INFORMATION,
 				"Command translation inferred",
 			).tooltip(tooltip).let {
