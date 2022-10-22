@@ -20,6 +20,7 @@
 		<p>It currently has the following features:</p>
 		<ul>
 			<li> Adds gutter icons to Commands and Events, blue is for public, gold is for ephemeral, each type has its proper icon.</li>
+			<li> Show translations for command's names/descriptions/alias (if any), same for arguments.</li>
 			<li> Moves you to <code>action</code> DSL when you click on it.</li>
 		</ul>
 		
@@ -41,11 +42,21 @@
 		<![CDATA[
 		<ul>
 			<li>
+				<b>0.5.0</b>
+				<p>
+					Add translations annotations to Arguments classes.<br>
+					Fix translations annotations not being added if the bundle is not found and is not inside a <code>translate</code> function.<br>
+					Remove support to Intellij 2022.3 as adding support to it removes support to 2022.1 without a complex workaround.<br>
+					Updated to Kotlin 1.7.20.
+				</p>
+			</li>
+			
+			<li>
 				<b>0.4.0</b>
 				<p>
-					Add aliasKey from chatCommand to gutter icon tooltip.
-					Listen to file changes to update translations.
-					Show translations into the gutter icon tooltip.
+					Add aliasKey from chatCommand to gutter icon tooltip.<br>
+					Listen to file changes to update translations.<br>
+					Show translations into the gutter icon tooltip.<br>
 					Remove support to IntelliJ 2021.3.
 				</p>
 			</li>
@@ -53,14 +64,14 @@
 			<li>
 				<b>0.3.0</b>
 				<p>
-					Hovering a translation key using a string literal will show the translation in the tooltip.
+					Hovering a translation key using a string literal will show the translation in the tooltip.<br>
 					Also warns you if no bundle is set.
 				</p>
 			</li>
 			<li>
 				<b>0.2.1</b>
 				<p>
-					Hovering an event now shows the event name.
+					Hovering an event now shows the event name.<br>
 					Updated minimum Intellij version to 2021.3 and maximum to 2022.3.
 				</p>
 			</li>
