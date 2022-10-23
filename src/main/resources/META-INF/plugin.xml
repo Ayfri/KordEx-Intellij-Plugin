@@ -42,6 +42,13 @@
 		<![CDATA[
 		<ul>
 			<li>
+				<b>0.5.1</b>
+				<p>
+					Performance regression to fix support for 2022.1.
+				</p>
+			</li>
+			
+			<li>
 				<b>0.5.0</b>
 				<p>
 					Add translations annotations to Arguments classes.<br>
