@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
 	java
-	kotlin("jvm") version "1.7.20"
+	kotlin("jvm") version "1.7.22"
 	id("org.jetbrains.intellij") version "1.10.1"
 }
 
