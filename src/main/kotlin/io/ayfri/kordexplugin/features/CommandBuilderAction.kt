@@ -11,7 +11,6 @@ import com.intellij.psi.util.nextLeaf
 import com.intellij.psi.util.parentOfType
 import com.intellij.refactoring.extractMethod.newImpl.ExtractMethodHelper.addSiblingAfter
 import io.ayfri.kordexplugin.EXTENSION_CLASS
-import io.ayfri.kordexplugin.logger
 import io.ayfri.kordexplugin.ui.CommandBuilderData
 import io.ayfri.kordexplugin.ui.CommandBuilderDialog
 import io.ayfri.kordexplugin.utils.findInsertAfterAnchor
@@ -38,7 +37,6 @@ class CommandBuilderAction : KotlinGenerateActionBase() {
 		builderDialog.show()
 
 		if (builderDialog.isOK) {
-			logger.info(builderDialog.data.toString())
 			val klass = getTargetClass(editor, file) ?: return
 			val context = klass.analyzeWithContent()
 			val classDescriptor = context.get(BindingContext.CLASS, klass) ?: return
@@ -72,8 +70,6 @@ class CommandBuilderAction : KotlinGenerateActionBase() {
 		val commandName = data.type.callName()
 		val nameExpression = "name = \"${data.name}\""
 		val descriptionExpression = data.description.takeIf { it.isNotBlank() }?.let { "description = \"$it\"" } ?: ""
-		logger.info("Generating $commandName command with name \"${data.name}\" and description \"$descriptionExpression\"")
-		logger.info(data.aliases.joinToString(", ") { "alias = \"$it\"" })
 
 		val aliasesExpression = data.aliases.takeIf { it.isNotEmpty() }?.let { aliases ->
 			"aliases = arrayOf(${aliases.joinToString(", ") { "\"$it\"" }})"
@@ -91,7 +87,7 @@ class CommandBuilderAction : KotlinGenerateActionBase() {
 					
 				}
 			}
-			""".trimIndent().replace(Regex("(\t+\n){2}"), " ").also { logger.info(it) })
+			""".trimIndent().replace(Regex("(\t+\n){2}"), " "))
 	}
 
 	val import = "com.kotlindiscord.kord.extensions.extensions."
