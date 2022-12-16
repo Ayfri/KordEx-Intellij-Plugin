@@ -34,10 +34,7 @@ class TranslationsListener : BulkFileListener {
 		
 		if (translationEvents.isEmpty()) return
 		
-		translationEvents.forEach { translationEvent ->
-			val file = translationEvent.file
-			val fileEvent = translationEvent.fileEvent
-			
+		translationEvents.forEach { (fileEvent, file) ->
 			if (fileEvent.isFromSave) {
 				file.properties.forEach { property ->
 					if (property.key != null) {

@@ -26,7 +26,7 @@ fun KtCallExpression.findAliasKey() = PsiTreeUtil.findChildrenOfAnyType(this, Kt
 	return@let it.right
 }
 
-private const val EXTENSION_CLASS = "com.kotlindiscord.kord.extensions.extensions.Extension"
+internal const val EXTENSION_CLASS = "com.kotlindiscord.kord.extensions.extensions.Extension"
 private const val SLASH_COMMAND = "com.kotlindiscord.kord.extensions.commands.application.slash.SlashCommand"
 fun ResolvedCall<*>.isValidKordExExpression(): Boolean {
 	val kotlinType = extensionReceiver?.type ?: return false
