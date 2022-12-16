@@ -17,7 +17,7 @@ repositories {
 }
 
 intellij {
-	version.set("2022.2")
+	version.set("2022.3")
 	type.set("IC")
 	
 	plugins.set(
@@ -32,13 +32,13 @@ intellij {
 
 tasks {
 	withType<JavaCompile> {
-		sourceCompatibility = "11"
-		targetCompatibility = "11"
+		sourceCompatibility = "17"
+		targetCompatibility = "17"
 	}
 	
 	withType<KotlinCompile> {
-		kotlinOptions.jvmTarget = "11"
-		
+		kotlinOptions.jvmTarget = "17"
+
 		// Delete build/tmp to update plugin in Intellij sandbox
 		delete {
 			delete(file("build/tmp"))
@@ -47,8 +47,13 @@ tasks {
 	
 	patchPluginXml {
 		version.set(project.version.toString())
-		sinceBuild.set("221")
-		untilBuild.set("222.*")
+		changeNotes.set("""
+			<![CDATA[
+				${file("CHANGELOG.html").readText()}
+			]]>
+		""".trimIndent())
+		sinceBuild.set("223")
+		untilBuild.set("223.*")
 	}
 	
 	signPlugin {
