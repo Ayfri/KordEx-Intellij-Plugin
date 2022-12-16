@@ -19,7 +19,7 @@ repositories {
 intellij {
 	version.set("2022.3")
 	type.set("IC")
-	
+
 	plugins.set(
 		listOf(
 			"java",
@@ -35,7 +35,7 @@ tasks {
 		sourceCompatibility = "17"
 		targetCompatibility = "17"
 	}
-	
+
 	withType<KotlinCompile> {
 		kotlinOptions.jvmTarget = "17"
 
@@ -44,7 +44,7 @@ tasks {
 			delete(file("build/tmp"))
 		}
 	}
-	
+
 	patchPluginXml {
 		version.set(project.version.toString())
 		changeNotes.set("""
@@ -55,7 +55,7 @@ tasks {
 		sinceBuild.set("223")
 		untilBuild.set("223.*")
 	}
-	
+
 	signPlugin {
 		val certificate = File("keys/chain.crt").readText(Charsets.UTF_8)
 		certificateChain.set(certificate)
@@ -63,7 +63,7 @@ tasks {
 		privateKey.set(key)
 		password.set(getEnv("PRIVATE_KEY_PASSWORD"))
 	}
-	
+
 	publishPlugin {
 		token.set(getEnv("PUBLISH_TOKEN"))
 	}

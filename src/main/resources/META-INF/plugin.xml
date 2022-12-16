@@ -2,136 +2,71 @@
 <idea-plugin url="https://github.com/Ayfri/KordEx-Intellij-Plugin" require-restart="false">
 	<!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
 	<id>io.ayfri.kordex-plugin</id>
-	
-	<!-- Public plugin name should be written in Title Case.
-		 Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+
+	<!--
+	Public plugin name should be written in Title Case.
+	Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
 	<name>KordEx Utils</name>
-	
+
 	<!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
 	<vendor email="pierre.ayfri@gmail.com" url="https://github.com/Ayfri">Ayfri</vendor>
-	
-	<!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
-		 Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
-		 Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+
+	<!--
+	Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+	Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+	Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
 	<description>
 		<![CDATA[
 		<p> This plugins adds helper features for developing Discord bots using <a href="https://github.com/Kord-Extensions/kord-extensions">KordEx</a>. </p>
-		
+
 		<p>It currently has the following features:</p>
 		<ul>
 			<li> Adds gutter icons to Commands and Events, blue is for public, gold is for ephemeral, each type has its proper icon.</li>
 			<li> Show translations for command's names/descriptions/alias (if any), same for arguments.</li>
 			<li> Moves you to <code>action</code> DSL when you click on it.</li>
 		</ul>
-		
+
 		<p>
 			Officially supporting the following versions of KordEx:<br>
 			1.5.3-SNAPSHOT through 1.5.5-SNAPSHOT
 		</p>
-		
+
 		<em>It may work on older versions, but it is not guaranteed.</em>
 		]]>
 	</description>
-	
-	<!-- Product and plugin compatibility requirements.
-		 Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+
+	<!--
+	Product and plugin compatibility requirements.
+	Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
 	<depends>com.intellij.modules.platform</depends>
 	<depends>org.jetbrains.kotlin</depends>
-	
-	<change-notes>
-		<![CDATA[
-		<ul>
-			<li>
-				<b>0.5.1</b>
-				<p>
-					Performance regression to fix support for 2022.1.
-				</p>
-			</li>
-			
-			<li>
-				<b>0.5.0</b>
-				<p>
-					Add translations annotations to Arguments classes.<br>
-					Fix translations annotations not being added if the bundle is not found and is not inside a <code>translate</code> function.<br>
-					Remove support to Intellij 2022.3 as adding support to it removes support to 2022.1 without a complex workaround.<br>
-					Updated to Kotlin 1.7.20.
-				</p>
-			</li>
-			
-			<li>
-				<b>0.4.0</b>
-				<p>
-					Add aliasKey from chatCommand to gutter icon tooltip.<br>
-					Listen to file changes to update translations.<br>
-					Show translations into the gutter icon tooltip.<br>
-					Remove support to IntelliJ 2021.3.
-				</p>
-			</li>
-			
-			<li>
-				<b>0.3.0</b>
-				<p>
-					Hovering a translation key using a string literal will show the translation in the tooltip.<br>
-					Also warns you if no bundle is set.
-				</p>
-			</li>
-			<li>
-				<b>0.2.1</b>
-				<p>
-					Hovering an event now shows the event name.<br>
-					Updated minimum Intellij version to 2021.3 and maximum to 2022.3.
-				</p>
-			</li>
-			<li>
-				<b>0.2.0</b>
-				<p>
-					Hovering gutter now shows you the name & description of the command/event and let you click to jump to the action DSL.<br>
-					Removed the KordEx dependency to reduce the size of the plugin.
-				</p>
-			</li>
-			<li>
-				<b>0.1.2</b>
-				<p>
-					Fix link of KordEx.
-				</p>
-			</li>
-			<li>
-				<b>0.1.1</b>
-				<p>
-					Fix compilation of plugin.
-				</p>
-			</li>
-			<li>
-				<b>0.1.0</b>
-				<p>
-					Add gutter to commands & events.<br>
-					Clicking on it moves you to <code>action</code> method.
-				</p>
-			</li>
-		</ul>
-		]]>
-	</change-notes>
-	
+
 	<actions>
 		<action
-			id="io.ayfri.kordexplugin.features.GoToActionAction"
-			class="io.ayfri.kordexplugin.features.GoToActionAction"
-			text="Go to Action"
-			description="Moves the cursor to the action of the actual command or event."
+				id="io.ayfri.kordexplugin.features.GoToActionAction"
+				class="io.ayfri.kordexplugin.features.GoToActionAction"
+				text="Go to Action"
+				description="Moves the cursor to the action of the actual command or event."
 		>
-			<add-to-group group-id="NavbarPopupMenu" />
+			<add-to-group group-id="NavbarPopupMenu"/>
+		</action>
+		<action id="io.ayfri.kordexplugin.features.CommandBuilderAction"
+		        class="io.ayfri.kordexplugin.features.CommandBuilderAction"
+		        text="Generate Command"
+		        description="Open the Command Builder to generate command.">
+			<add-to-group group-id="KotlinGenerateGroup" anchor="last"/>
 		</action>
 	</actions>
-	
-	<applicationListeners>
-		<listener class="io.ayfri.kordexplugin.translations.TranslationsListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener" />
-	</applicationListeners>
-	
-	<!-- Extension points defined by the plugin.
-		 Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
-	<extensions defaultExtensionNs="com.intellij">
-		<codeInsight.lineMarkerProvider implementationClass="io.ayfri.kordexplugin.features.CommandLineMarker" language="kotlin" />
-		<annotator implementationClass="io.ayfri.kordexplugin.features.TranslationAnnotator" language="kotlin" />
-	</extensions>
 
+	<applicationListeners>
+		<listener class="io.ayfri.kordexplugin.translations.TranslationsListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+	</applicationListeners>
+
+	<!--
+	Extension points defined by the plugin.
+	Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+	<extensions defaultExtensionNs="com.intellij">
+		<codeInsight.lineMarkerProvider implementationClass="io.ayfri.kordexplugin.features.CommandLineMarker" language="kotlin"/>
+		<annotator implementationClass="io.ayfri.kordexplugin.features.TranslationAnnotator" language="kotlin"/>
+	</extensions>
 </idea-plugin>
