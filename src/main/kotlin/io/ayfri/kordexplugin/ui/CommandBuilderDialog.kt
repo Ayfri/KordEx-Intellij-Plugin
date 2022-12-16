@@ -18,8 +18,8 @@ enum class CommandType {
 	EPHEMERAL_SLASH,
 	PUBLIC_SLASH;
 
-	fun fancyDisplayName() = name.replace("_"," ").titlecase()
-	fun callName() = name.replace("_","").camelcase()
+	fun fancyDisplayName() = name.titlecase("_")
+	fun callName() = name.camelcase("_", "")
 
 	companion object {
 		val values = CommandType.values()
